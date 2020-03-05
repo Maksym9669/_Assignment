@@ -5,12 +5,15 @@ import logo from "./logo.svg";
 import "./App.css";
 
 function App() {
+  let id = 0;
   let firstNameRef = React.createRef();
   let lastNameRef = React.createRef();
   let phoneRef = React.createRef();
   let genderRef = React.createRef();
   let ageRef = React.createRef();
-  const [formData, setFormData] = useState([]);
+  const [formData, setFormData] = useState(
+    JSON.parse(localStorage.getItem("formData"))
+  );
   const [warning, modifyWarning] = useState("");
   const {
     value: firstName,
@@ -26,11 +29,17 @@ function App() {
   const { value: gender, bind: bindGender, reset: resetGender } = useInput("");
   const { value: age, bind: bindAge, reset: resetAge } = useInput("");
 
+  React.useEffect(() => {
+    localStorage.setItem("formData", JSON.stringify(formData));
+  }, [formData]);
+
   function addData() {
     setFormData(formData => [
       ...formData,
-      { id: 1, firstName, lastName, age, gender, phone }
+      { id: id++, firstName, lastName, age, gender, phone }
     ]);
+
+    // setTimeout(() => console.log(formData), 2000);
   }
 
   function validateData() {
